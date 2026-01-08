@@ -1,38 +1,38 @@
-
-
-//Database Connection
+// Database Connection
 const dotenv = require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
-const mysql = require('mysql2');
-const Sequelize =require("sequelize");
-
-const db= new Sequelize(
-  process.env.MYSQLDATABASE,
-  process.env.MYSQLUSER,
-  process.env.MYSQLPASSWORD,
+const db = new Sequelize(
+  process.env.MYSQLDATABASE,  // Database name
+  process.env.MYSQLUSER,      // Username
+  process.env.MYSQLPASSWORD,  // Password
   {
     host: process.env.MYSQLHOST,
-    port: process.env.MYSQLPORT,
+    port: process.env.MYSQLPORT || 3306,
     dialect: 'mysql',
     logging: false,
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false
+        rejectUnauthorized: false  // For Railway/MySQL cloud SSL
       }
+    },
+    define: {
+      freezeTableName: true,    // optional: prevents auto-pluralizing table names
     }
   }
 );
 
-db.authenticate()
-  .then(async ()=>{
-    await db.async;
-    console.log("Database connection is successful");
- })
-   .catch((error) => {
+// Test connection
+const connectDB = async () => {
+  try {
+    await db.authenticate();
+    console.log("✅ Database connection is successful");
+  } catch (error) {
+    console.error("❌ Database connection failed:", error.message);
+  }
+};
 
-    console.error("Database connection failed");
-});
+connectDB();
 
-module.exports =db
-;
+module.exports = db;
