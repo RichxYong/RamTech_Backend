@@ -18,6 +18,10 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(express.json());           
+app.use(express.urlencoded({ extended: true }))
+
+
 // ========== ROUTES ==========
 const AuthRoutes = require("./routes/auth.route");
 app.use("/auth", AuthRoutes);
