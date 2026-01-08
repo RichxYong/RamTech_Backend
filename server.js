@@ -6,23 +6,26 @@ const cors = require("cors");
 
 const app = express();
 
-// ========== MIDDLEWARE ==========
+// ========== connection  the front end========
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:5500'],
+    origin: [
+        'http://localhost:3000',
+        'http://127.0.0.1:5500',
+        'https://ramtechelectricals.netlify.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // ========== ROUTES ==========
+const AuthRoutes = require("./routes/auth.route");
+app.use("/auth", AuthRoutes);
+
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to RAMTECH ELECTRICALS' });
 }); 
 
-const AuthRoutes = require("./routes/auth.route");
-app.use("/auth", AuthRoutes);
 
 const CustomerRoutes = require("./routes/customer.route");
 app.use("/customers",CustomerRoutes);
